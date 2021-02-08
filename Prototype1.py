@@ -22,20 +22,55 @@ def sentence(x, dictionary):
 
 #main
 
-file_name = "Prototype1.txt"
-r = parsing_excel("Prototype1.txt")
+simple_phrases = "Simple Phrases.txt"
+talk = parsing_excel(simple_phrases)
 
-flag = True
-while flag:
-    for i in range(1,len(r)+1):
-        print (i, r[i])
-    number = int(input("Please enter a number between 1-"+ str(len(r))+": "))
-    
-    if (number < 1) or (number > len(r)):
-        print("Error: Please try again")
-    else:
-        flag = False
-    
-t = sentence(number, r)
-print (t)
+home_devices = "Home Devices.txt"
+home = parsing_excel(home_devices)
 
+
+
+print("Please select a category")
+print("1. Home Devices")
+print("2. Simple Phrases")
+print("Press space if you wish to exit")
+choice = input()
+
+
+if choice == '1':
+    flag = True
+    while flag:
+        for i in range(1,len(home)+1):
+            print (i, home[i])
+        number = int(input("Please enter a number between 1-"+ str(len(home))+": "))
+    
+        if (number < 1) or (number > len(home)):
+            print("Error: Please try again")
+        else:
+            flag = False
+    print('\n')
+    command = sentence(number, home)
+    print (command)
+
+
+
+elif choice == '2':
+    flag = True
+    while flag:
+        for i in range(1,len(talk)+1):
+            print (i, talk[i])
+        number = int(input("Please enter a number between 1-"+ str(len(talk))+": "))
+    
+        if (number < 1) or (number > len(talk)):
+            print("Error: Please try again")
+        else:
+            flag = False
+
+    print('\n')
+    say = sentence(number, talk)
+    print (say)
+
+    
+else:
+    print("Good bye :)")
+    
