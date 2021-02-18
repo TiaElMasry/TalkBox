@@ -1,8 +1,9 @@
 # This is prototype 2 for Talkbox
 
 import tkinter as tk
+from tkinter import messagebox
     
-
+# Creates a home devices dictionary
 def home_devices():
     f = open("Home Devices.txt").readlines()
     my_dict = {}
@@ -10,9 +11,10 @@ def home_devices():
     for i in range(len(f)):
         t = f[i]
         my_dict[i+1] = t
-        print(t)
+    make_buttons(my_dict)
     return my_dict
 
+# Creates a simple phrases dictionary
 def simple_phrases():
     f = open("Simple Phrases.txt").readlines()
     my_dict = {}
@@ -20,8 +22,22 @@ def simple_phrases():
     for i in range(len(f)):
         t = f[i]
         my_dict[i+1] = t
-        print(t)
+    make_buttons(my_dict)
     return my_dict
+
+#Print the message that corresponds to the specific int input in that specified dictionary
+def print_text(x, my_dict):
+    print(my_dict[x])
+    
+    
+# Takes dictionary as input and creates a set of buttons
+def make_buttons(x):
+    for i in range(len(x)):
+        name1 = tk.Button(
+            frame,
+            text= x[i+1],
+            command = print_text(i+1, x))
+        name1.pack(side=tk.LEFT)
 
 
 root = tk.Tk()
