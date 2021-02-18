@@ -10,7 +10,7 @@ def home_devices():
     for i in range(len(f)):
         t = f[i]
         my_dict[i+1] = t
-    print(my_dict)
+        print(t)
     return my_dict
 
 def simple_phrases():
@@ -20,7 +20,7 @@ def simple_phrases():
     for i in range(len(f)):
         t = f[i]
         my_dict[i+1] = t
-    print(my_dict)
+        print(t)
     return my_dict
 
 
