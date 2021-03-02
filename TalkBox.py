@@ -52,7 +52,7 @@ class TalkBox(tk.Tk):
 class HomePage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
-        photo = PhotoImage(file = "HomeDevicesPic.png")
+        photo = PhotoImage(file = "HomeDevicesPic.gif")
         button1 = ttk.Button(self, text ="Home devices", image = photo,
         command = lambda : controller.show_frame(Home))
      
