@@ -9,11 +9,11 @@ LARGEFONT =("Verdana", 35)
   
 class TalkBox(tk.Tk):
      
-    # __init__ function for class tkinterApp 
-    def __init__(self, *args, **kwargs): 
+    # __init__ function for class TalkBox 
+    def __init__(self): 
          
         # __init__ function for class Tk
-        tk.Tk.__init__(self, *args, **kwargs)
+        tk.Tk.__init__(self)
          
         # creating a container
         container = tk.Frame(self)  
@@ -32,7 +32,7 @@ class TalkBox(tk.Tk):
             frame = F(container, self)
   
             # initializing frame of that object from
-            # startpage, page1, page2 respectively with 
+            # HomePage, Home, devices respectively with 
             # for loop
             self.frames[F] = frame 
   
@@ -44,10 +44,9 @@ class TalkBox(tk.Tk):
     # parameter
     def show_frame(self, cont):
         frame = self.frames[cont]
+        frame.refresh()
         frame.tkraise()
 
-    
- 
 # first window frame HomePage
   
 class HomePage(tk.Frame):
@@ -68,18 +67,49 @@ class HomePage(tk.Frame):
         # putting the button in its place by
         # using grid
         button2.grid(row = 1, column = 5, padx = 10, pady = 10)
+
+    def refresh(self):
+        pass
   
-          
-  
-  
+class BaseFrame(tk.Frame):
+    
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = ttk.Label(self, text = self.label_text,)
+        label.grid(row = 0, column = 2, padx = 10, pady = 10)
+        self.buttons = []
+    
+    def read_file(self, file_name):
+        with open(file_name) as f:
+            data = {i: line.strip() for i,line in enumerate(f, 1)}   
+        
+        # buttons
+        for i, name in data.items():
+            button = ttk.Button(self, text = name,
+                                command = lambda name = name: self.show_message(name))
+            button.grid(row = 2, column = i, padx = 10, pady = 10)
+            self.buttons.append(button)
+
+    def clean_up(self):
+        for i in self.buttons:
+            i.destroy()
+        self.buttons = []
+
+    def refresh(self):
+        self.clean_up()
+        self.read_file(self.file_name)
+
+    def show_message(self, text):
+        messagebox.showinfo(message = text)
+
+
 # second window frame Home
-class Home(tk.Frame):
+class Home(BaseFrame):
 
     def __init__(self, parent, controller):
-        
-        tk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text ="Home devices",)
-        label.grid(row = 0, column = 2, padx = 10, pady = 10)
+        self.file_name = "Home Devices.txt"
+        self.label_text = "Home Devices"
+        super().__init__(parent, controller)
 
         
         # button to show frame 2 with text
@@ -99,38 +129,14 @@ class Home(tk.Frame):
         # putting the button in its place by 
         # using grid
         button2.grid(row = 3, column = 2, padx = 10, pady = 10)
-
-        # reading home devices file
-        f = open("Home Devices.txt").readlines()
-        my_dict = {}
-
-        # creating a dictionary of all options and a list of
-        list1 = []
-        list2 = []
-        for i in range(len(f)):
-            t = f[i]
-            my_dict[i+1] = t
-            list1.append(t)
-            list2.append(i+1)
-
-        # buttons
-        for i in range(len(my_dict)):
-            name = my_dict[i+1]
-            button = ttk.Button(self, text = name,
-                                command = lambda name = name: self.show_message(name))
-            button.grid(row = 2, column = i+1, padx = 10, pady = 10)
-
-
-    def show_message(self, text):
-        messagebox.showinfo(message = text)
-
                 
 # third window frame Phrases
-class Phrases(tk.Frame): 
+class Phrases(BaseFrame): 
+    
     def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text ="Simple Phrases")
-        label.grid(row = 0, column = 2, padx = 10, pady =10)
+        self.file_name = "Simple Phrases.txt"
+        self.label_text = "Simple Phrases"
+        super().__init__(parent, controller)
   
         # button to show frame 2 with text
         # layout2
@@ -150,26 +156,9 @@ class Phrases(tk.Frame):
         # using grid
         button2.grid(row = 3, column = 2, padx = 10, pady = 10)
   
+def main():
+    app = TalkBox()
+    app.mainloop()
 
-        # reading simple phrases file
-        f = open("Simple Phrases.txt").readlines()
-        my_dict = {}
-
-        # creating a dictionary of all options
-        for i in range(len(f)):
-            t = f[i]
-            my_dict[i+1] = t
-
-        # buttons
-        for i in range(len(my_dict)):
-            name = my_dict[i+1]
-            button = ttk.Button(self, text = my_dict[i+1],
-                                command = lambda name = name: self.show_message(name))
-            button.grid(row = 2, column = i+1, padx = 10, pady = 10)
-
-    def show_message(self, text):
-        messagebox.showinfo(message = text)
-
-# Driver Code
-app = TalkBox()
-app.mainloop()
+if __name__ == "__main__":
+    main()
