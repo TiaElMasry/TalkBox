@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import *
 from tkinter import PhotoImage
  
 LARGEFONT =("Verdana", 35)
@@ -50,19 +51,24 @@ class TalkBox(tk.Tk):
 # first window frame HomePage
   
 class HomePage(tk.Frame):
+    global photo1
+    global photo2
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
-        photo = PhotoImage(file = "HomeDevicesPic.gif")
-        button1 = ttk.Button(self, text ="Home devices", image = photo,
+        photo1 = PhotoImage(file = "HomeDevicesPic.gif")
+        button1 = ttk.Button(self, text ="Talk to devices", image = photo1, compound = BOTTOM,
         command = lambda : controller.show_frame(Home))
+        button1.image = photo1
      
         # putting the button in its place by
         # using grid
         button1.grid(row = 1, column = 1, padx = 10, pady = 10)
   
         ## button to show frame 2 with text layout2
-        button2 = ttk.Button(self, text ="Simple Phrases",
+        photo2 = PhotoImage(file = "SimplePhrasesPic.gif")
+        button2 = ttk.Button(self, text ="Talk to people", image = photo2, compound = BOTTOM,
         command = lambda : controller.show_frame(Phrases))
+        button2.image = photo2
      
         # putting the button in its place by
         # using grid
