@@ -5,9 +5,11 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import *
 from tkinter import PhotoImage
+import tkinter.font as tkFont
  
-LARGEFONT =("Verdana", 35)
-  
+LARGEFONT = ("Verdana", 15)
+
+
 class TalkBox(tk.Tk):
      
     # __init__ function for class TalkBox 
@@ -56,8 +58,11 @@ class HomePage(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         photo1 = PhotoImage(file = "HomeDevicesPic.gif")
+        photo1 = photo1.subsample(3,3)
+        Style = tkFont.Font(family = "Verdana", size = 15)
         button1 = ttk.Button(self, text ="Talk to devices", image = photo1, compound = BOTTOM,
         command = lambda : controller.show_frame(Home))
+        #button1.config(font = Style)
         button1.image = photo1
      
         # putting the button in its place by
@@ -66,6 +71,7 @@ class HomePage(tk.Frame):
   
         ## button to show frame 2 with text layout2
         photo2 = PhotoImage(file = "SimplePhrasesPic.gif")
+        photo2 = photo2.subsample(3,3)
         button2 = ttk.Button(self, text ="Talk to people", image = photo2, compound = BOTTOM,
         command = lambda : controller.show_frame(Phrases))
         button2.image = photo2
