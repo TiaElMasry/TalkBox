@@ -35,7 +35,7 @@ class TalkBox(tk.Tk):
             frame = F(container, self)
   
             # initializing frame of that object from
-            # HomePage, Home, devices respectively with 
+            # HomePage, Home devices and Simple Phrases respectively with 
             # for loop
             self.frames[F] = frame 
   
