@@ -6,6 +6,12 @@ from tkinter import messagebox
 from tkinter import *
 from tkinter import PhotoImage
 import tkinter.font as tkFont
+#for the button 
+from datatime import datatime
+#for the speakers 
+from espeak import espeak 
+
+
  
 LARGEFONT = ("Verdana", 15)
 
@@ -98,9 +104,13 @@ class BaseFrame(tk.Frame):
         # buttons
         for i, name in data.items():
             button = ttk.Button(self, text = name,
-                                command = lambda name = name: self.show_message(name))
+                                command = lambda name = name: self.speak(name))
             button.grid(row = 2, column = i, padx = 10, pady = 10)
             self.buttons.append(button)
+    
+    def speak(self,text):
+        espeak.synth(text)
+        print(text)
 
     def clean_up(self):
         for i in self.buttons:
