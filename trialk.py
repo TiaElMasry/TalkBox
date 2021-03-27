@@ -21,65 +21,65 @@ varColumn = 0
 def leftKey(event):
     if curBut == [-1,-1]:
         curBut[:] = [0,0]
-        buttonL[0][0].configure(highlightbackground='red')
+        buttonL[0][0].configure(highlightbackground='black')
     elif curBut[0] == 4:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [0,10]
-        buttonL[0][10].configure(highlightbackground='red')
+        buttonL[0][10].configure(highlightbackground='black')
     else:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [curBut[0], (curBut[1]-1)%11]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     buttonL[curBut[0]][curBut[1]].focus_set()
 
 def rightKey(event):
     if curBut == [-1,-1]:
         curBut[:] = [0,0]
-        buttonL[0][0].configure(highlightbackground='red')
+        buttonL[0][0].configure(highlightbackground='black')
     elif curBut[0] == 4:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [0,0]
-        buttonL[0][0].configure(highlightbackground='red')
+        buttonL[0][0].configure(highlightbackground='black')
     else:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [curBut[0], (curBut[1]+1)%11]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     buttonL[curBut[0]][curBut[1]].focus_set()
 
 def upKey(event):
     if curBut == [-1,-1]:
         curBut[:] = [0,0]
-        buttonL[0][0].configure(highlightbackground='red')
+        buttonL[0][0].configure(highlightbackground='black')
     elif curBut[0] == 0:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]-1)%5, 0]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     elif curBut[0] == 4:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]-1)%5, 5]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     else:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]-1)%5, curBut[1]]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     buttonL[curBut[0]][curBut[1]].focus_set()
 
 def downKey(event):
     if curBut == [-1,-1]:
         curBut[:] = [0,0]
-        buttonL[0][0].configure(highlightbackground='red')
+        buttonL[0][0].configure(highlightbackground='black')
     elif curBut[0] == 3:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]+1)%5, 0]
-        buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='black')
     elif curBut[0] == 4:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]+1)%5, 5]
-        buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='black')
     else:
         buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
         curBut[:] = [(curBut[0]+1)%5, curBut[1]]
-        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].configure(highlightbackground='black')
     buttonL[curBut[0]][curBut[1]].focus_set()
 
 def select(value, x, y):

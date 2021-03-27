@@ -20,13 +20,13 @@ class TalkBox(tk.Tk):
          
         # creating a container
         container = tk.Frame(self)  
-        container.pack(side = "top", fill = "both", expand = True) 
+        container.pack(side = "top", fill = "both", expand = True)
   
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
   
         # initializing frames to an empty array
-        self.frames = {}  
+        self.frames = {}
   
         # iterating through a tuple consisting
         # of the different page layouts
@@ -85,22 +85,85 @@ class HomePage(tk.Frame):
   
 class BaseFrame(tk.Frame):
     
+    global buttonL
+    global curBut
+    global varRow
+    global varColumn
+    curBut = [-1,-1]
+    buttonL = [[]]
+    varRow = 1
+    varColumn = 0
+    
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text = self.label_text,)
         label.grid(row = 0, column = 2, padx = 10, pady = 10)
         self.buttons = []
-    
+
+
     def read_file(self, file_name):
         with open(file_name) as f:
-            data = {i: line.strip() for i,line in enumerate(f, 1)}   
+            data = {i: line.strip() for i,line in enumerate(f, 1)}
+        '''global buttonL 
+        buttonL = [[]] 
+        global curBut
+        curBut = [-1,-1] 
+        global varRow
+        varRow = 1
+        global varColumn
+        varColumn = 0'''
+        global h
+        h = Scrollbar(orient = 'horizontal')
+        h.pack(side = BOTTOM, fill = X)
         
         # buttons
         for i, name in data.items():
-            button = ttk.Button(self, text = name,
-                                command = lambda name = name: self.show_message(name))
-            button.grid(row = 2, column = i, padx = 10, pady = 10)
-            self.buttons.append(button)
+            button = ttk.Button(self, text = name)
+                                #command = lambda name = name: self.show_message(name))
+            
+            buttonL[varRow-1].append(button)
+            button.grid(row = varRow, column = varColumn, padx = 10, pady = 10)
+            
+
+            button.bind("<Left>", self.left)
+            button.bind("<Right>", self.right)
+            button.bind("<Down>", self.down)
+            button.bind("<Up>", self.up)
+            varColumn +=1
+
+            #x = varRow - 1
+            #y = varRow
+            #z = varColumn
+            #buttonL[x].append(button)
+            #button.grid(row = y, column = z, padx = 10, pady = 10)
+            #self.buttons.append(button)
+            #z += 1
+            '''if z > 10:
+                z = 0
+                y += 1
+                buttonL.append([])
+
+        tk.Frame.bind('<Left>', self.leftKey('<Left>'))
+        tk.Frame.bind('<Right>', self.rightKey('<Right>'))
+        tk.Frame.bind('<Up>', self.upKey('<Up>'))
+        tk.Frame.bind('<Down>', self.downKey('<Down>'))'''
+
+    def left(self, event):
+        #messagebox.showinfo(message = "left")
+        if curBut == [-1,-1]:
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightthickness = 10, highlightbackground = 'black')
+    
+    def right(self, event):
+        messagebox.showinfo(message = "right")
+
+    def up(self, event):
+        messagebox.showinfo(message = "up")
+
+    def down(self, event):
+        messagebox.showinfo(message = "down")
+
 
     def clean_up(self):
         for i in self.buttons:
@@ -114,19 +177,88 @@ class BaseFrame(tk.Frame):
     def show_message(self, text):
         messagebox.showinfo(message = text)
 
+    def speak_out_loud(self, text):
+        '''espeak stuff
+        '''
+    
+    def leftKey(self, event):
+        if curBut == [-1,-1]:
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightbackground='red')
+        elif curBut[0] == 4:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [0,10]
+            buttonL[0][10].configure(highlightbackground='red')
+        else:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [curBut[0], (curBut[1]-1)%11]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].focus_set()
+
+    def rightKey(self, event):
+        if curBut == [-1,-1]:
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightbackground='red')
+        elif curBut[0] == 4:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightbackground='red')
+        else:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [curBut[0], (curBut[1]+1)%11]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].focus_set()
+
+    def upKey(self, event):
+        if curBut == [-1,-1]:
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightbackground='red')
+        elif curBut[0] == 0:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]-1)%5, 0]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        elif curBut[0] == 4:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]-1)%5, 5]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        else:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]-1)%5, curBut[1]]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].focus_set()
+
+    def downKey(self, event):
+        if curBut == [-1,-1]:
+            curBut[:] = [0,0]
+            buttonL[0][0].configure(highlightbackground='red')
+        elif curBut[0] == 3:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]+1)%5, 0]
+            buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='red')
+        elif curBut[0] == 4:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]+1)%5, 5]
+            buttonL[curBut[0]][curBut[1]%11].configure(highlightbackground='red')
+        else:
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='#d9d9d9')
+            curBut[:] = [(curBut[0]+1)%5, curBut[1]]
+            buttonL[curBut[0]][curBut[1]].configure(highlightbackground='red')
+        buttonL[curBut[0]][curBut[1]].focus_set()
+    
+
 
 # second window frame Home
 class Home(BaseFrame):
 
     def __init__(self, parent, controller):
         self.file_name = "Home Devices.txt"
-        self.label_text = "Home Devices"
+        self.label_text = "Talk to devices"
         super().__init__(parent, controller)
 
         
         # button to show frame 2 with text
         # layout2
-        button1 = ttk.Button(self, text ="Simple phrases",
+        button1 = ttk.Button(self, text ="Talk to people",
                             command = lambda : controller.show_frame(Phrases))
      
         # putting the button in its place 
@@ -141,18 +273,22 @@ class Home(BaseFrame):
         # putting the button in its place by 
         # using grid
         button2.grid(row = 3, column = 2, padx = 10, pady = 10)
+
+        
+        
+
                 
 # third window frame Phrases
 class Phrases(BaseFrame): 
     
     def __init__(self, parent, controller):
         self.file_name = "Simple Phrases.txt"
-        self.label_text = "Simple Phrases"
+        self.label_text = "Talk to people"
         super().__init__(parent, controller)
   
         # button to show frame 2 with text
         # layout2
-        button1 = ttk.Button(self, text ="Home devices",
+        button1 = ttk.Button(self, text ="Talk to devices",
                             command = lambda : controller.show_frame(Home))
      
         # putting the button in its place by 
