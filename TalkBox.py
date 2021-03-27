@@ -88,11 +88,11 @@ class BaseFrame(tk.Frame):
     global buttonL
     global curBut
     global varRow
-    global varColumn
+    
     curBut = [-1,-1]
     buttonL = [[]]
-    varRow = 1
-    varColumn = 0
+    varRow = 0
+
     
 
     def __init__(self, parent, controller):
@@ -113,16 +113,19 @@ class BaseFrame(tk.Frame):
         varRow = 1
         global varColumn
         varColumn = 0'''
+        varColumn = 0
         global h
         h = Scrollbar(orient = 'horizontal')
         h.pack(side = BOTTOM, fill = X)
         
         # buttons
         for i, name in data.items():
-            button = ttk.Button(self, text = name)
+            button = ttk.Button(self, text = name, width=5, bg="#000000", fg="#ffffff", highlightthickness=4, 
+                       activebackground="gray65", highlightcolor='red', activeforeground="#000000", relief="raised", padx=12,
+                       pady=4, bd=4)
                                 #command = lambda name = name: self.show_message(name))
             
-            buttonL[varRow-1].append(button)
+            buttonL[varRow].insert(varColumn, button)
             button.grid(row = varRow, column = varColumn, padx = 10, pady = 10)
             
 
@@ -153,7 +156,7 @@ class BaseFrame(tk.Frame):
         #messagebox.showinfo(message = "left")
         if curBut == [-1,-1]:
             curBut[:] = [0,0]
-            buttonL[0][0].configure(highlightthickness = 10, highlightbackground = 'black')
+            buttonL[0][0].configure(highlightbackground = 'black')
     
     def right(self, event):
         messagebox.showinfo(message = "right")
