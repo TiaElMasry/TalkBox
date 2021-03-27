@@ -85,21 +85,15 @@ class HomePage(tk.Frame):
   
 class BaseFrame(tk.Frame):
     
-    global buttonL
-    global curBut
-    global varRow
-    
-    curBut = [-1,-1]
-    buttonL = [[]]
-    varRow = 0
-
-    
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = ttk.Label(self, text = self.label_text,)
         label.grid(row = 0, column = 2, padx = 10, pady = 10)
         self.buttons = []
+        self.curBut = [-1,-1]
+        self.buttonL = [[]]
+        self.varRow = 0
 
 
     def read_file(self, file_name):
@@ -120,13 +114,11 @@ class BaseFrame(tk.Frame):
         
         # buttons
         for i, name in data.items():
-            button = ttk.Button(self, text = name, width=5, bg="#000000", fg="#ffffff", highlightthickness=4, 
-                       activebackground="gray65", highlightcolor='red', activeforeground="#000000", relief="raised", padx=12,
-                       pady=4, bd=4)
+            button = ttk.Button(self, text = name)
                                 #command = lambda name = name: self.show_message(name))
             
-            buttonL[varRow].insert(varColumn, button)
-            button.grid(row = varRow, column = varColumn, padx = 10, pady = 10)
+            self.buttonL[self.varRow].insert(varColumn, button)
+            button.grid(row = self.varRow, column = varColumn, padx = 10, pady = 10)
             
 
             button.bind("<Left>", self.left)
@@ -134,7 +126,8 @@ class BaseFrame(tk.Frame):
             button.bind("<Down>", self.down)
             button.bind("<Up>", self.up)
             varColumn +=1
-
+        if self.buttonL and self.buttonL[0]:
+            self.buttonL[0][0].focus()
             #x = varRow - 1
             #y = varRow
             #z = varColumn
@@ -153,11 +146,11 @@ class BaseFrame(tk.Frame):
         tk.Frame.bind('<Down>', self.downKey('<Down>'))'''
 
     def left(self, event):
-        #messagebox.showinfo(message = "left")
-        if curBut == [-1,-1]:
-            curBut[:] = [0,0]
-            buttonL[0][0].configure(highlightbackground = 'black')
-    
+        targetIndex = self.buttonL[0].index(event.widget)-1  
+        btnTarget = self.buttonL[0][targetIndex]
+        btnTarget.focus()  
+        
+
     def right(self, event):
         messagebox.showinfo(message = "right")
 
