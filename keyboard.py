@@ -1,3 +1,4 @@
+
 import time
 import Adafruit_ADS1x15
 import RPi.GPIO as GPIO
@@ -20,16 +21,16 @@ GAIN = 1
 #adcX.start_adc(2,gain=GAIN)
 #adcSW.start_adc(3,gain=GAIN)
 
-
+start=0
 print('Press Ctrl-C to quit...')
 while True:
 
-    start =time.time()
-    while(time.time() - start)<= 5:
+    start= time.time()
+    while(time.time() - start)< 5:
         if(adcY.read_adc(1,gain=GAIN) >=25000):
             print('joystick towards the user')
-            keyboard.press(Key.down)
-            keyboard.release(Key.down)
+            #keyboard.press(Key.down)
+            #keyboard.release(Key.down)
         if(adcX.read_adc(2,gain=GAIN) <=10000):
             print('joystick right')
             keyboard.press(Key.ctrl_r)
@@ -42,6 +43,4 @@ while True:
             print('Button is pressed')
             keyboard.press(Key.enter)
             keyboard.release(Key.enter)
-                #value = adcY.get_last_result()
-                #print('Channel Y: {0}'.format(value))
-            time.sleep(0.5)
+        time.sleep(0.5)
