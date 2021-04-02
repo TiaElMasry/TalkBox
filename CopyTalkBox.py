@@ -6,9 +6,21 @@ from tkinter import messagebox
 from tkinter import *
 from tkinter import PhotoImage
 import tkinter.font as tkFont
- 
+import time
+import espeak
+from espeak import espeak
+import mysql.connector as mysql
+
 LARGEFONT = ("Verdana", 15)
 
+db = mysql.connect(
+    host ="a2plcpnl0371.prod.iad2.secureserver.net",
+    user = "zbadawi99",
+    passwd ="talkBox",
+    database ="talkBox"
+)
+
+cursor = db.cursor()
 
 class TalkBox(tk.Tk):
      
@@ -62,7 +74,7 @@ class HomePage(tk.Frame):
         photo1 = PhotoImage(file = "HomeDevicesPic.gif")
         photo1 = photo1.subsample(3,3)
         Style = tkFont.Font(family = "Verdana", size = 15)
-        ttk.Style().configure("TButton", padding=6, relief="flat", background="#000")
+        #ttk.Style().configure("TButton", padding=6, relief="flat", background="#000")
         button1 = ttk.Button(self, text ="Talk to devices", image = photo1, compound = BOTTOM,
         command = lambda : controller.show_frame(Home))
         self.buttonList.append(button1)
@@ -128,8 +140,20 @@ class BaseFrame(tk.Frame):
         
 
     def read_file(self, file_name):
-        with open(file_name) as f:
-            data = {i: line.strip() for i,line in enumerate(f, 1)}
+        records =[]
+        if(file_name == "Simple Phrases.txt"):
+            querySP = "SELECT PHRASES FROM simplePhrases"
+            cursor.execute(querySP)
+            records = cursor.fetchall()
+        elif(file_name == "Home Devices.txt"):
+            queryHD = "SELECT Phrase FROM homeDevices"
+            cursor.execute(queryHD)
+            records = cursor.fetchall()
+        data ={}
+        for i in range(len(records)):
+            data[i+1]=records[i]
+        #with open(file_name) as f:
+        #    data = {i: line.strip() for i,line in enumerate(f, 1)}
         varColumn = 0
         
         for i, name in data.items():
