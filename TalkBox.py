@@ -5,9 +5,8 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import *
 from tkinter import PhotoImage
-import tkinter.font as tkFont
+#import tkinter.font as tkFont
  
-LARGEFONT = ("Verdana", 15)
 
 
 class TalkBox(tk.Tk):
@@ -38,7 +37,7 @@ class TalkBox(tk.Tk):
             # HomePage, Home devices and Simple Phrases respectively with 
             # for loop
             self.frames[F] = frame 
-  
+            #frame.pack(fill = BOTH, expand = 1)
             frame.grid(row = 0, column = 0, sticky ="nsew")
   
         self.show_frame(HomePage)
@@ -53,17 +52,16 @@ class TalkBox(tk.Tk):
 # first window frame HomePage
   
 class HomePage(tk.Frame):
-    global photo1
-    global photo2
+    
     def __init__(self, parent, controller): 
         self.buttonList=[]
         self.last_state = 0
         tk.Frame.__init__(self, parent)
         photo1 = PhotoImage(file = "HomeDevicesPic.gif")
-        photo1 = photo1.subsample(3,3)
-        Style = tkFont.Font(family = "Verdana", size = 15)
-        ttk.Style().configure("TButton", padding=6, relief="flat", background="#000")
-        button1 = ttk.Button(self, text ="Talk to devices", image = photo1, compound = BOTTOM,
+        photo1 = photo1.subsample(1,1)
+        s = ttk.Style()
+        s.configure('X.TButton', font = ('Times New Roman', 20))
+        button1 = ttk.Button(self, text ="Talk to devices", style = 'X.TButton', image = photo1, compound = BOTTOM,
         command = lambda : controller.show_frame(Home))
         self.buttonList.append(button1)
         button1.focus()
@@ -75,8 +73,8 @@ class HomePage(tk.Frame):
   
         ## button to show frame 2 with text layout2
         photo2 = PhotoImage(file = "SimplePhrasesPic.gif")
-        photo2 = photo2.subsample(3,3)
-        button2 = ttk.Button(self, text ="Talk to people", image = photo2, compound = BOTTOM,
+        photo2 = photo2.subsample(1,1)
+        button2 = ttk.Button(self, text ="Talk to people", style = 'X.TButton', image = photo2, compound = BOTTOM,
         command = lambda : controller.show_frame(Phrases))
         self.buttonList.append(button2)
         button2.image = photo2
@@ -113,39 +111,67 @@ class HomePage(tk.Frame):
 class BaseFrame(tk.Frame):
     
     def __init__(self, parent, controller):
-        self.current_row = 0
-        self.current_column = 0
-        self.last_state = 0
         tk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text = self.label_text,)
-        label.grid(row = 0, column = 2, padx = 10, pady = 10)
+        #label = ttk.Label(self, text = self.label_text)
+        #label.grid(row = 0, column = 2, padx = 10, pady = 10)
         self.buttons = []
         self.curBut = [-1,-1]
         self.buttonL = [[]]
         self.varRow = 0
         self.make_nav_buttons(controller)
-        self.scrollbar = ttk.Scrollbar(self, orient='horizontal')
-        
 
+        self.current_column = 0
+        self.last_state = 0
+        self.current_row = 0
+
+        # Create a canvas 
+        self.my_canvas = Canvas(self)
+        self.my_canvas.grid(row = 0, column = 1, sticky = 'news')
+
+        # Create a scrollbar and set its command to scroll through the canvas
+        self.h = tk.Scrollbar(self, orient = tk.HORIZONTAL, command = self.my_canvas.xview)
+        self.h.grid(column = 1, sticky = 'ew')
+
+        self.my_canvas.configure(xscrollcommand = self.h.set)
+        self.my_canvas.bind('<Configure>', lambda e: self.my_canvas.configure(scrollregion = self.my_canvas.bbox("all")))
+
+        # Create a 2nd frame to store buttons inside the the canvas
+        self.frame_buttons = tk.Frame(self.my_canvas)
+        self.my_canvas.create_window((0,0), window=self.frame_buttons, anchor='nw')
+
+        
+        
     def read_file(self, file_name):
         with open(file_name) as f:
             data = {i: line.strip() for i,line in enumerate(f, 1)}
         varColumn = 0
         
         for i, name in data.items():
-            ttk.Style().configure("TButton", padding=6, relief="flat", background="#000")
-            button = ttk.Button(self, text = name,
+            # Styling the button
+            q = ttk.Style()
+            q.configure('W.TButton', relief="flat", background = 'white', foreground = 'black', font = ('Times New Roman', 14))
+            
+            # Creating buttons from the data and placing them in the frame
+            button = ttk.Button(self.frame_buttons, text = name, style = 'W.TButton',
                                 command = lambda name = name: self.speak_out_loud(name))
             
             self.buttonL[self.varRow].insert(varColumn, button)
-            button.grid(row = self.varRow, column = varColumn, padx = 10, pady = 10)
+            button.grid(row = self.varRow, column = varColumn, padx = 10, pady = 10, ipadx = 10, ipady=10, sticky = 'news')
             self.buttons.append(button)
+
+            # bind keyboard keys to each button
             self.bind_keys(button)
-            
+
+            # update the scroll region with the creation of each button
+            self.updateScrollRegion()
             varColumn +=1
 
         if self.buttonL and self.buttonL[0]:
             self.buttonL[0][0].focus()
+        
+    def updateScrollRegion(self):
+        self.my_canvas.update_idletasks()
+        self.my_canvas.config(scrollregion = self.frame_buttons.bbox())
     
 
     def clean_up(self):
@@ -166,6 +192,8 @@ class BaseFrame(tk.Frame):
     def bind_keys(self, button):
         button.bind("<Left>", lambda event : self.change(event, "left"))
         button.bind("<Right>", lambda event : self.change(event, "right"))
+        self.current_column = 0
+        self.current_row = 0
         button.bind("<Down>", lambda event : self.change(event, "vertical"))
         button.bind("<Return>", lambda event : event.widget.invoke())
         
@@ -174,25 +202,27 @@ class BaseFrame(tk.Frame):
         b = self.nav_buttons = []
         # button to show frame 2 with text
         # layout2
-        button = ttk.Button(self, text = self.other_label,
+        st = ttk.Style()
+        st.configure('B.TButton', relief="flat", background = 'white', foreground = 'black', font = ('Times New Roman', 10))
+        button = ttk.Button(self, text = self.other_label, style = 'B.TButton',
                             command = lambda : controller.show_frame(self.other_frame))
         b.append(button)
      
         # putting the button in its place 
         # by using grid
         self.bind_keys(button)
-        button.grid(row = 3, column = 0, padx = 10, pady = 10)
+        button.grid(row = 3, column = 0, padx = 10, pady = 10, ipadx = 10, ipady=10)
   
         # button to show frame 2 with text
         # layout2
-        button = ttk.Button(self, text = "Home Page",
+        button = ttk.Button(self, text = "Home page", style = 'B.TButton',
                             command = lambda : controller.show_frame(HomePage))
      
         # putting the button in its place by 
         # using grid
         self.bind_keys(button)
         
-        button.grid(row = 3, column = 1, padx = 10, pady = 10)
+        button.grid(row = 3, column = 2, padx = 10, pady = 10, ipadx = 10, ipady=10)
 
         b.append(button)
  
@@ -213,6 +243,11 @@ class BaseFrame(tk.Frame):
                 b = self.nav_buttons
             col = self.current_column = (self.current_column - 1) % len(b)
             b[col].focus()
+
+            if (b == self.buttons) :
+                frac1 = col/len(b)
+                self.my_canvas.xview_moveto(frac1)
+
         elif direction == "right":
             if self.current_row == 0:
                 b = self.buttons
@@ -221,7 +256,10 @@ class BaseFrame(tk.Frame):
       
             col = self.current_column = (self.current_column + 1) % len(b)
             b[col].focus()
-
+        
+            if b == self.buttons:
+                frac1 = col/len(b)
+                self.my_canvas.xview_moveto(frac1)
 
 # second window frame Home
 class Home(BaseFrame):
@@ -247,7 +285,7 @@ class Phrases(BaseFrame):
   
 def main():
     app = TalkBox()
-    app.geometry("400x250")
+    app.geometry("620x420")
     app.mainloop()
 
 if __name__ == "__main__":
