@@ -24,9 +24,15 @@
         
          <form action="db_insert.php">
              <!--------------- LAT--------------------->
-            <label for="l"> Simple Phrase:</label>
+            <label for="l"> Phrase:</label>
             <input type="text" id="phrase" name="phrase" value="enter a phrase">
-            <input type="submit" value="Submit">
+            <select name="category" id="category">
+            <option value="0" selected="selected">Select the phrase category</option>
+            <option value="TalkToPeople">Talk to People</option>
+            <option value="TalkToDevices">Talk to Devices</option>
+            </select>
+            <input type="submit" value="Submit">  
+            
             
             
         </form>
@@ -37,7 +43,6 @@
         
          
       <?php   
-         echo "<h2>All Phrases listed</h2>";
          
          include "db_list_all_results.php";
          
